@@ -1,25 +1,31 @@
 from internal.Options import *
 from time import sleep
-import socket
+#import socket
 import threading
-
+import json
+import client
+import datetime
 class SensorBase:
 
 	"Base class for all sensors"
 
 	interval = 0.0
-	sock = None
-	IP = ""
-	port = 0
+	IP = "127.0.0.1"
+	port = 50009
 	encoding = 'UTF-8'
 	isRunning = True
-
+	msg = {}
+	udp_client = None
+	metrics = {}
 	def __init__(self, options):
 		self.options = options
 		self.interval = 1.0 / options.frequency
-		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		#self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.IP = options.monitorIP
 		self.port = options.port
+		self.udp_client = client.Client(self.IP, self.port)
+		# this is only common field in both register and data frame
+		self.msg['sensor_name'] = self.getSensorName()
 
 	def stop(self):
 		self.isRunning = False
@@ -36,18 +42,27 @@ class SensorBase:
 	# Register sensor in monitor
 	# If fail just exit
 	def register(self):
-		msg = bytes("register_me", self.encoding)
-		self.sock.sendto(msg, (self.IP, self.port))
+		register_msg = self.msg.copy()
+		register_msg['rpm'] = self.getFrequency()*60.0
+		register_msg['hostname'] = self.getHostName()
+		register_msg['username'] = self.options.username
+		register_msg['sensor_type'] = None
+		self.udp_client.send_data(json.JSONEncoder().encode(register_msg))
+		print(json.JSONEncoder().encode(register_msg))
 		print("Sensor registered")
-		
 
 	# Virtual method - write here unique logic for every sensor
 	def work(self):
-		
-		while True:
+		data_msg = self.msg.copy()
+		while self.isRunning:
+			for metric, method in self.metrics.items():
+				data_msg['metrics_name'] = metric
+				data_msg['data'] = {'val' : method(), 'time' : self.getTimestamp() }
+				json_msg = json.JSONEncoder().encode(data_msg)
+				print(json_msg)
+				self.udp_client.send_data(json_msg)
 			print("Sending metrics...")
 			sleep(self.interval)
-
 
 	# Wrapper for sensor name
 	def getSensorName(self):
@@ -56,3 +71,10 @@ class SensorBase:
 	# Wrapper for host name
 	def getHostName(self):
 		return self.options.hostname;
+	
+	def getFrequency(self):
+		return self.options.frequency;
+
+	def getTimestamp(self):
+		return datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
+
