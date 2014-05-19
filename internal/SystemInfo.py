@@ -13,11 +13,13 @@ class SystemInfo:
 		return platform.system() + " " + platform.release()
 		
 	# Return my IP
+	# Doesn't work with hostnames where are polish characters 
 	@staticmethod
 	def IP():
 		return socket.gethostbyname(socket.gethostname())
 
 	# Return hostname
+	@staticmethod
 	def hostname():
 		return socket.gethostname()
 		
