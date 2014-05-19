@@ -2,6 +2,7 @@ import sys
 import getopt
 import json
 import os.path
+import socket
 from pprint import pprint
 
 def usage():
@@ -26,7 +27,7 @@ def load(filename):
 		
 	jsonData=open(filename)
 	data = json.load(jsonData)
-	pprint(data)
+	#pprint(data)
 	jsonData.close()
 	
 	try:
@@ -52,7 +53,7 @@ def main(argv):
 		sys.exit()
 		
 	frequency = 0
-	monitorIP = ""
+	monitorIP = "127.0.0.7"
 	port = 0
 	hostname = ""
 	sensorname = ""
@@ -69,31 +70,10 @@ def main(argv):
 			usage()
 			sys.exit()
 		elif o in ("-f", "--frequency"):
-			try:
-				float(value)
-			except ValueError:
-				print("Frequency must be positive float")
-				sys.exit(2)
-		
-			if float(value) <= 0:
-				print("Frequency must be positive float")
-				sys.exit(2)
-				
-			frequency = float(value)
-			
+			frequency = value
 		elif o in ("-m", "--monitor-ip"):
 			monitorIP = value
 		elif o in ("-d", "--port"):
-			try:
-				int(value)
-			except ValueError:
-				print("Port must be positive integer")
-				sys.exit(2)
-			
-			if int(value) <= 0:
-				print("Port must be positive integer")
-				sys.exit(2)
-				
 			port = value
 		elif o in ("-n", "--hostname"):
 			hostname = value
@@ -106,6 +86,43 @@ def main(argv):
 		else:	
 			print("Unhandled option")
 			sys.exit(2)	
+			
+	# Frequency validation
+	
+	try:
+		float(frequency)
+	except ValueError:
+		print("Frequency must be positive float")
+		sys.exit(2)
+
+	if float(frequency) <= 0:
+		print("Frequency must be positive float")
+		sys.exit(2)
+		
+	frequency = float(frequency)
+	
+	# Port validation
+	
+	try:
+		int(port)
+	except ValueError:
+		print("Port must be positive integer")
+		sys.exit(2)
+
+	if float(frequency) <= 0:
+		print("Port must be positive integer")
+		sys.exit(2)
+		
+	port = int(port)
+	
+	# Monitor IP validation
+	
+	try:
+		socket.inet_aton(monitorIP)
+	except socket.error:
+		print("Invalid monitor IP")
+		sys.exit(2)
+		
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
