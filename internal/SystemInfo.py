@@ -6,7 +6,7 @@ import socket
 class SystemInfo:
 
 	"Provides general information about system"
-
+	
 	# Return system name f.e. 'Windows 7'
 	@staticmethod
 	def name():
@@ -17,10 +17,19 @@ class SystemInfo:
 	def IP():
 		return socket.gethostbyname(socket.gethostname())
 
+	# Return hostname
+	def hostname():
+		return socket.gethostname()
+		
 	# Return CPU name
 	@staticmethod
 	def CPU(): 
 		return platform.processor()
+		
+	# Return architecture (32bit, 64bit)
+	@staticmethod
+	def architecture():
+		return platform.architecture()[0]
 
 	# Return total amount of installed RAM in bytes.
 	@staticmethod
