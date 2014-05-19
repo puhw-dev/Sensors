@@ -90,7 +90,6 @@ def main(argv):
 	# Frequency validation
 	
 	try:
-		float(frequency)
 		if float(frequency) <= 0:
 			raise ValueError
 	except ValueError:
@@ -102,7 +101,6 @@ def main(argv):
 	# Port validation
 	
 	try:
-		int(port)
 		if int(port) <= 0:
 			raise ValueError
 	except ValueError:
