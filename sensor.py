@@ -91,11 +91,9 @@ def main(argv):
 	
 	try:
 		float(frequency)
+		if float(frequency) <= 0:
+			raise ValueError
 	except ValueError:
-		print("Frequency must be positive float")
-		sys.exit(2)
-
-	if float(frequency) <= 0:
 		print("Frequency must be positive float")
 		sys.exit(2)
 		
@@ -105,11 +103,9 @@ def main(argv):
 	
 	try:
 		int(port)
+		if int(port) <= 0:
+			raise ValueError
 	except ValueError:
-		print("Port must be positive integer")
-		sys.exit(2)
-
-	if float(frequency) <= 0:
 		print("Port must be positive integer")
 		sys.exit(2)
 		
