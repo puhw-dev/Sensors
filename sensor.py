@@ -12,6 +12,7 @@ def usage():
 	
 	print("\t-f,--frequency=FLOAT\tSet sensor frequency")
 	print("\t-m,--monitor-ip=IP\tSet monitor IP address")
+	print("\t-d,--port=INT\t\tSet UDP port")
 	print("\t-n,--hostname=STRING\tSet host name")
 	print("\t-s,--sensorname=STRING\tSet sensor name")
 	print("\t-u,--username=STRING\tSet username")
@@ -25,15 +26,21 @@ def load(filename):
 		
 	jsonData=open(filename)
 	data = json.load(jsonData)
-	#pprint(data)
+	pprint(data)
 	jsonData.close()
 	
-	return [ data["frequency"], data["monitor-ip"], data["hostname"], data["sensorname"], data["username"], data["password"] ]
+	try:
+		result = [ data["frequency"], data["monitor-ip"], data["port"], data["hostname"], data["sensorname"], data["username"], data["password"] ]
+	except KeyError as err:
+		print ("No key " + str(err) + "in config file")
+		sys.exit(2)
+		
+	return result
 	
 
 def main(argv):
 	try:
-		opts, args = getopt.getopt(argv, "hf:m:n:s:u:p:", ["help", "frequency=","monitor-ip=","hostname=","sensorname=","username=","password="])
+		opts, args = getopt.getopt(argv, "hf:m:d:n:s:u:p:", ["help", "frequency=","monitor-ip=","port=","hostname=","sensorname=","username=","password="])
 	except getopt.GetoptError as err:
 		print(err)
 		usage()
@@ -46,6 +53,7 @@ def main(argv):
 		
 	frequency = 0
 	monitorIP = ""
+	port = 0
 	hostname = ""
 	sensorname = ""
 	username = ""
@@ -53,7 +61,7 @@ def main(argv):
 	
 	# Load config file
 	if len(args) == 1:
-		frequency,monitorIP,hostname,sensorname,username,password = load(args[0])
+		frequency,monitorIP,port,hostname,sensorname,username,password = load(args[0])
 		
 	# Parse options
 	for o,value in opts:
@@ -75,6 +83,18 @@ def main(argv):
 			
 		elif o in ("-m", "--monitor-ip"):
 			monitorIP = value
+		elif o in ("-d", "--port"):
+			try:
+				int(value)
+			except ValueError:
+				print("Port must be positive integer")
+				sys.exit(2)
+			
+			if int(value) <= 0:
+				print("Port must be positive integer")
+				sys.exit(2)
+				
+			port = value
 		elif o in ("-n", "--hostname"):
 			hostname = value
 		elif o in ("-s", "--sensorname"):
