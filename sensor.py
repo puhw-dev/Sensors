@@ -72,15 +72,17 @@ def main(argv):
 
 	options = Options()
 
-	# Check if type is given
-	if(argv[0] != "SystemInfo" and argv[0] != "NetworkInfo" and argv[0] != "SystemLoad"):	
-		usage()
-		sys.exit()
-		
 	# Check if filename is given when no options
 	if len(args) == 0 and len(opts) == 0:
 		usage()
 		sys.exit()
+
+	# Check if type is given
+	if(argv[0] != "SystemInfo" and argv[0] != "NetworkInfo" and argv[0] != "SystemLoad"):	
+		print("Sensor type not recognized")
+		sys.exit()
+		
+
 		
 	# Load config file
 	if len(args) == 1:
