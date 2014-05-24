@@ -13,7 +13,6 @@ class SensorNetworkInfo(SensorBase):
 	kbitsPerSecondIn = 0
 	statisticsPerSecondThread = None
 	runEvent = None
-	isRunning = True
 
 	isFirstRunKBitsPerSecondIn = True
 	isFirstRunKBitsPerSecondOut = True

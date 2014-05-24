@@ -12,6 +12,7 @@ class SensorBase:
 	IP = ""
 	port = 0
 	encoding = 'UTF-8'
+	isRunning = True
 
 	def __init__(self, options):
 		self.options = options
@@ -19,6 +20,9 @@ class SensorBase:
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.IP = options.monitorIP
 		self.port = options.port
+
+	def stop(self):
+		self.isRunning = False
 
 	# Main method - runs sensor logic
 	def run(self):

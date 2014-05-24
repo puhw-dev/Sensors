@@ -156,6 +156,7 @@ def main(argv):
 	try:
 		sensor.run()
 	except:
+		sensor.stop()
 		print("Unexpected error:", sys.exc_info())
 		print("Closing...")
 		
