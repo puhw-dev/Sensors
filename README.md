@@ -11,9 +11,10 @@ psutil - https://pythonhosted.org/psutil/
 ### Running
 
 In order to examples type in console  
+```bash
 bash run-system-load.sh  
 or  
-bash run-system-info.sh
+bash run-system-info.sh  
 or  
 bash run-network-info.sh
-
+```
