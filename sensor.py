@@ -152,7 +152,11 @@ def main(argv):
 	
 
 	sensor = SensorBase(options)
-	sensor.run()
+	
+	try:
+		sensor.run()
+	except:
+		print("Closing...")
 		
 
 if __name__ == "__main__":

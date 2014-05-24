@@ -1,4 +1,5 @@
 from internal.Options import *
+from time import sleep
 import socket
 import threading
 
@@ -39,8 +40,10 @@ class SensorBase:
 		
 
 	def sendMetrics(self):
-		print("Sending metrics...")
-		threading.Timer(self.interval, self.sendMetrics).start()
+		
+		while True:
+			print("Sending metrics...")
+			sleep(self.interval)
 
 
 	# Wrapper for sensor name
