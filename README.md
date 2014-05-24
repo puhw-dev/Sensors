@@ -10,7 +10,7 @@ psutil - https://pythonhosted.org/psutil/
 
 ### Running
 
-In order to examples type in console  
+In order to run examples type in console  
 ```bash
 bash run-system-load.sh  
 or  
