@@ -4,8 +4,11 @@ import json
 import os.path
 import socket
 from pprint import *
-from internal.Options import Options
-from internal.SensorBase import SensorBase
+from internal.Options import *
+from internal.SensorBase import *
+from internal.SensorNetworkInfo import *
+from internal.SensorSystemInfo import *
+from internal.SensorSystemLoad import *
 
 def usage():
 	print("sensor.py TYPE [OPTION]... [CONFIG FILE]")
@@ -69,13 +72,10 @@ def main(argv):
 
 	options = Options()
 
-	# Check type
-
+	# Check if type is given
 	if(argv[0] != "SystemInfo" and argv[0] != "NetworkInfo" and argv[0] != "SystemLoad"):	
 		usage()
 		sys.exit()
-
-	options.sensortype = argv[0]
 		
 	# Check if filename is given when no options
 	if len(args) == 0 and len(opts) == 0:
@@ -85,6 +85,9 @@ def main(argv):
 	# Load config file
 	if len(args) == 1:
 		options = load(args[0])
+
+	# Set sensor type
+	options.sensortype = argv[0]
 		
 	# Parse options
 	for o,value in opts:
@@ -141,21 +144,19 @@ def main(argv):
 
 	# Run sensor
 
-	#sensor = None
-	#
-	#if options.sensortype == "SystemInfo":
-	#	sensor = SensorSystemInfo(options)
-	#if options.sensortype == "SystemLoad":
-	#	sensor = SensorSystemLoad(options)
-	#if options.sensortype == "NetworkInfo":
-	#	sensor = SensorNetworkInfo(options)
+	sensor = None
 	
-
-	sensor = SensorBase(options)
+	if options.sensortype == "SystemInfo":
+		sensor = SensorSystemInfo(options)
+	if options.sensortype == "SystemLoad":
+		sensor = SensorSystemLoad(options)
+	if options.sensortype == "NetworkInfo":
+		sensor = SensorNetworkInfo(options)
 	
 	try:
 		sensor.run()
 	except:
+		print("Unexpected error:", sys.exc_info())
 		print("Closing...")
 		
 

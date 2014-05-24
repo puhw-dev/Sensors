@@ -15,31 +15,30 @@ class SensorBase:
 
 	def __init__(self, options):
 		self.options = options
-		self.interval = 1.0/options.frequency
+		self.interval = 1.0 / options.frequency
 		self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.IP = options.monitorIP
 		self.port = options.port
 
 	# Main method - runs sensor logic
-
 	def run(self):
 		print("====================================")
 		print("Hello, World!")
 		print("My name is " + self.getSensorName())
 		print("====================================")
 		self.register()
-		self.sendMetrics()
+		self.work()
 
-	# Register sensor in monitor.
+	# Register sensor in monitor
 	# If fail just exit
-
 	def register(self):
 		msg = bytes("register_me", self.encoding)
 		self.sock.sendto(msg, (self.IP, self.port))
 		print("Sensor registered")
 		
 
-	def sendMetrics(self):
+	# Virtual method - write here unique logic for every sensor
+	def work(self):
 		
 		while True:
 			print("Sending metrics...")
