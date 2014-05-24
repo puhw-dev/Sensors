@@ -1,0 +1,11 @@
+{
+	"frequency" : "2.0",
+	"monitor-ip" : "127.0.0.1", 
+	"port" : "5000",
+	"hostname" : "Host-A",
+	"sensorname" : "Network Info",
+	"username" : "admin",
+	"password" : "admin"
+}
+	
+	

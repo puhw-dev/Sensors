@@ -3,12 +3,20 @@ import getopt
 import json
 import os.path
 import socket
-from pprint import pprint
+from pprint import *
+from internal.Options import Options
+from internal.SensorBase import SensorBase
 
 def usage():
-	print("sensor.py [OPTION]... [CONFIG FILE]")
+	print("sensor.py TYPE [OPTION]... [CONFIG FILE]")
+	print("")
+	print("TYPE:")
+	print("\tSystemInfo")
+	print("\tSystemLoad")
+	print("\tNetworkInfo")
 	print("")
 
+	print("OPTION:")
 	print("\t-h,--help\t\tShow usage")
 	
 	print("\t-f,--frequency=FLOAT\tSet sensor frequency")
@@ -27,42 +35,56 @@ def load(filename):
 		
 	jsonData=open(filename)
 	data = json.load(jsonData)
-	#pprint(data)
-	jsonData.close()
 	
+	print("====================================")
+	print("Settings:")
+	print("====================================")
+	pprint(data)
+	jsonData.close()
+	print("====================================")
+	options = Options()	
 	try:
-		result = [ data["frequency"], data["monitor-ip"], data["port"], data["hostname"], data["sensorname"], data["username"], data["password"] ]
+		options.frequency = data["frequency"]
+		options.monitorIP = data["monitor-ip"]
+		options.port = data["port"]
+		options.hostname = data["hostname"]
+		options.sensorname = data["sensorname"]
+		options.username = data["username"]
+		options.password = data["password"]
 	except KeyError as err:
 		print ("No key " + str(err) + "in config file")
 		sys.exit(2)
 		
-	return result
+	return options
 	
 
 def main(argv):
+
 	try:
-		opts, args = getopt.getopt(argv, "hf:m:d:n:s:u:p:", ["help", "frequency=","monitor-ip=","port=","hostname=","sensorname=","username=","password="])
+		opts, args = getopt.getopt(argv[1:], "hf:m:d:n:s:u:p:", ["help", "frequency=","monitor-ip=","port=","hostname=","sensorname=","username=","password="])
 	except getopt.GetoptError as err:
 		print(err)
 		usage()
 		sys.exit(2)
+
+	options = Options()
+
+	# Check type
+
+	if(argv[0] != "SystemInfo" and argv[0] != "NetworkInfo" and argv[0] != "SystemLoad"):	
+		usage()
+		sys.exit()
+
+	options.sensortype = argv[0]
 		
 	# Check if filename is given when no options
 	if len(args) == 0 and len(opts) == 0:
 		usage()
 		sys.exit()
 		
-	frequency = 0
-	monitorIP = "127.0.0.7"
-	port = 0
-	hostname = ""
-	sensorname = ""
-	username = ""
-	password = ""
-	
 	# Load config file
 	if len(args) == 1:
-		frequency,monitorIP,port,hostname,sensorname,username,password = load(args[0])
+		options = load(args[0])
 		
 	# Parse options
 	for o,value in opts:
@@ -70,19 +92,19 @@ def main(argv):
 			usage()
 			sys.exit()
 		elif o in ("-f", "--frequency"):
-			frequency = value
+			options.frequency = value
 		elif o in ("-m", "--monitor-ip"):
-			monitorIP = value
+			options.monitorIP = value
 		elif o in ("-d", "--port"):
-			port = value
+			options.port = value
 		elif o in ("-n", "--hostname"):
-			hostname = value
+			options.hostname = value
 		elif o in ("-s", "--sensorname"):
-			sensorname = value
+			options.sensorname = value
 		elif o in ("-u", "--username"):
-			username = value
+			options.username = value
 		elif o in ("-p", "--password"):
-			password = value
+			options.password = value
 		else:	
 			print("Unhandled option")
 			sys.exit(2)	
@@ -90,32 +112,47 @@ def main(argv):
 	# Frequency validation
 	
 	try:
-		if float(frequency) <= 0:
+		if float(options.frequency) <= 0:
 			raise ValueError
 	except ValueError:
 		print("Frequency must be positive float")
 		sys.exit(2)
 		
-	frequency = float(frequency)
+	options.frequency = float(options.frequency)
 	
 	# Port validation
 	
 	try:
-		if int(port) <= 0:
+		if int(options.port) <= 0:
 			raise ValueError
 	except ValueError:
 		print("Port must be positive integer")
 		sys.exit(2)
 		
-	port = int(port)
+	options.port = int(options.port)
 	
 	# Monitor IP validation
 	
 	try:
-		socket.inet_aton(monitorIP)
+		socket.inet_aton(options.monitorIP)
 	except socket.error:
 		print("Invalid monitor IP")
 		sys.exit(2)
+
+	# Run sensor
+
+	#sensor = None
+	#
+	#if options.sensortype == "SystemInfo":
+	#	sensor = SensorSystemInfo(options)
+	#if options.sensortype == "SystemLoad":
+	#	sensor = SensorSystemLoad(options)
+	#if options.sensortype == "NetworkInfo":
+	#	sensor = SensorNetworkInfo(options)
+	
+
+	sensor = SensorBase(options)
+	sensor.run()
 		
 
 if __name__ == "__main__":
