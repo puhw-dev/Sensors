@@ -24,3 +24,4 @@ bash run-system-info.sh
 or  
 bash run-network-info.sh
 ```
+You need to set PYTHONPATH variable too. It should point to directory with UDP_communication scripts.
