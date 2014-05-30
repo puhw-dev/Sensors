@@ -10,7 +10,15 @@ class SensorSystemInfo(SensorBase):
 
 	def __init__(self, options):
 		SensorBase.__init__(self,options)
-
+		# add metrics' names and methods here		
+		self.metrics = {
+			'systemName' : self.name,
+			#'IP' : self.IP, sth is fucked up
+			'CPU' : self.CPU,
+			'architecture' : self.architecture,
+			'totalRAM' : self.totalRAM,
+			'totalDiskSpace' : self.totalDiskSpace
+		}
 	# Return system name f.e. 'Windows 7'
 	def name(self):
 		return platform.system() + " " + platform.release()
