@@ -24,6 +24,15 @@ class SensorNetworkInfo(SensorBase):
 
 		statisticsPerSecondThread = threading.Thread(target = self.__gatherStatistics)
 		statisticsPerSecondThread.start()
+		# add metrics' names and methods here		
+		self.metrics = {
+			'kBitsPerSecondOut' : self.kBitsPerSecondOut,
+			'kBitsPerSecondIn' : self.kBitsPerSecondIn,
+			'bytesSent' : self.bytesSent,
+			'bytesReceived' : self.bytesReceived,
+			'packetsSent' : self.packetsSent,
+			'packetsReceived' : self.packetsReceived
+		}
 
 	# Return bytes send
 	def bytesSent(self):
