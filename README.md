@@ -8,9 +8,10 @@ Python 3.4
 psutil - https://pythonhosted.org/psutil/ 
 
     1. Install Python 3.4  
-    2. Install psutil   
-      a) cd psutil-2.1.1; setup.py build  
-      b) setup.py install  
+    2. Install psutil
+      a) download it or use pip and skip the rest of points.
+      b) cd psutil-2.1.1; setup.py build  
+      c) setup.py install  
   
 
 
