@@ -1,6 +1,5 @@
 from internal.Options import *
 from time import sleep
-#import socket
 import threading
 import json
 import client
@@ -20,7 +19,6 @@ class SensorBase:
 	def __init__(self, options):
 		self.options = options
 		self.interval = 1.0 / options.frequency
-		#self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.IP = options.monitorIP
 		self.port = options.port
 		self.udp_client = client.Client(self.IP, self.port)
@@ -43,6 +41,7 @@ class SensorBase:
 	# If fail just exit
 	def register(self):
 		register_msg = self.msg.copy()
+		register_msg['message_type'] = "register"
 		register_msg['rpm'] = self.getFrequency()*60.0
 		register_msg['hostname'] = self.getHostName()
 		register_msg['username'] = self.options.username
@@ -57,6 +56,7 @@ class SensorBase:
 		while self.isRunning:
 			for metric, method in self.metrics.items():
 				data_msg['metrics_name'] = metric
+				data_msg['message_type'] = "measurement"
 				data_msg['data'] = {'val' : method(), 'time' : self.getTimestamp() }
 				json_msg = json.JSONEncoder().encode(data_msg)
 				print(json_msg)
@@ -76,5 +76,5 @@ class SensorBase:
 		return self.options.frequency;
 
 	def getTimestamp(self):
-		return datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S")
+		return datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S");
 
