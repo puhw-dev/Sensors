@@ -7,3 +7,5 @@ class Options:
 	username = ""
 	password = "" 
 	sensortype = ""
+	config_file = ""
+

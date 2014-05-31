@@ -48,12 +48,13 @@ def load(filename):
 	options = Options()	
 	try:
 		options.frequency = data["frequency"]
-		options.monitorIP = data["monitor-ip"]
-		options.port = data["port"]
+		options.monitorIP = data["server_ip"]
+		options.port = data["server_port"]
 		options.hostname = data["hostname"]
 		options.sensorname = data["sensorname"]
 		options.username = data["username"]
-		options.password = data["password"]
+		options.password = data["secret"]
+		options.config_file = filename
 	except KeyError as err:
 		print ("No key " + str(err) + "in config file")
 		sys.exit(2)
