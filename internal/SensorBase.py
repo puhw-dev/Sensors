@@ -9,8 +9,6 @@ class SensorBase:
 	"Base class for all sensors"
 
 	interval = 0.0
-	IP = "127.0.0.1"
-	port = 50009
 	encoding = 'UTF-8'
 	isRunning = True
 	msg = {}
@@ -19,9 +17,7 @@ class SensorBase:
 	def __init__(self, options):
 		self.options = options
 		self.interval = 1.0 / options.frequency
-		self.IP = options.monitorIP
-		self.port = options.port
-		self.udp_client = client.Client(self.IP, self.port)
+		self.udp_client = client.Client(options.config_file)
 		# this is only common field in both register and data frame
 		self.msg['sensor_name'] = self.getSensorName()
 
@@ -42,7 +38,7 @@ class SensorBase:
 	def register(self):
 		register_msg = self.msg.copy()
 		register_msg['message_type'] = "register"
-		register_msg['rpm'] = self.getFrequency()*60.0
+		register_msg['rpm'] = int(self.getFrequency()*60)
 		register_msg['hostname'] = self.getHostName()
 		register_msg['username'] = self.options.username
 		register_msg['sensor_type'] = None
