@@ -1,9 +1,9 @@
 from internal.Options import *
 from time import sleep
+import time
 import threading
 import json
 import client
-import datetime
 class SensorBase:
 
 	"Base class for all sensors"
@@ -72,5 +72,5 @@ class SensorBase:
 		return self.options.frequency;
 
 	def getTimestamp(self):
-		return datetime.datetime.now().strftime("%d/%m/%y %H:%M:%S");
+		return int(time.time());
 
