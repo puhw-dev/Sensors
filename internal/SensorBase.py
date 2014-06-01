@@ -53,7 +53,7 @@ class SensorBase:
 			for metric, method in self.metrics.items():
 				data_msg['metrics_name'] = metric
 				data_msg['message_type'] = "measurement"
-				data_msg['data'] = {'val' : method(), 'time' : self.getTimestamp() }
+				data_msg['data'] = {'val' : method(), 'time' : str(self.getTimestamp()) }
 				json_msg = json.JSONEncoder().encode(data_msg)
 				print(json_msg)
 				self.udp_client.send_data(json_msg)
