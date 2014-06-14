@@ -32,6 +32,7 @@ class SensorBase:
 		print("My name is " + self.getSensorName())
 		print("====================================")
 		self.register()
+		sleep(1)
 		self.work()
 
 	# Register sensor in monitor
