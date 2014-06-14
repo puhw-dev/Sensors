@@ -1,7 +1,7 @@
 {
 	"frequency" : "2.0",
 	"hostname" : "Host-A",
-	"sensorname" : "Network Info",
+	"sensorname" : "Network Info1",
 	"username" : "admin",
 
 	"listen_on_port" : 50010,

@@ -7,6 +7,7 @@ class SensorSystemLoad(SensorBase):
 	"Provides information about system load"
 	def __init__(self, options):
 		SensorBase.__init__(self,options)
+		self.sensortype = "System Load"
 		# add metrics' names and methods here		
 		self.metrics = {
 			'freeMemory' : self.freeMemory,

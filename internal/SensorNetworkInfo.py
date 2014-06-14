@@ -19,9 +19,9 @@ class SensorNetworkInfo(SensorBase):
 
 	def __init__(self, options):
 		SensorBase.__init__(self,options)
+		self.sensortype = "Network Info"
 		self.lastBytesReceived = self.bytesReceived()
 		self.lastBytesSent = self.bytesSent()
-
 		statisticsPerSecondThread = threading.Thread(target = self.__gatherStatistics)
 		statisticsPerSecondThread.start()
 		# add metrics' names and methods here		

@@ -10,6 +10,7 @@ class SensorSystemInfo(SensorBase):
 
 	def __init__(self, options):
 		SensorBase.__init__(self,options)
+		self.sensortype = "System Info"
 		# add metrics' names and methods here		
 		self.metrics = {
 			'systemName' : self.name,

@@ -1,7 +1,7 @@
 {
 	"frequency" : "2.0",
 	"hostname" : "Host-A",
-	"sensorname" : "System Load",
+	"sensorname" : "System Load1",
 	"username" : "admin",
 
 	"listen_on_port" : 50010,

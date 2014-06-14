@@ -14,6 +14,7 @@ class SensorBase:
 	msg = {}
 	udp_client = None
 	metrics = {}
+	sensortype = None
 	def __init__(self, options):
 		self.options = options
 		self.interval = 1.0 / options.frequency
@@ -41,7 +42,7 @@ class SensorBase:
 		register_msg['rpm'] = int(self.getFrequency()*60)
 		register_msg['hostname'] = self.getHostName()
 		register_msg['username'] = self.options.username
-		register_msg['sensor_type'] = None
+		register_msg['sensor_type'] = self.sensortype
 		self.udp_client.send_data(json.JSONEncoder().encode(register_msg))
 		print(json.JSONEncoder().encode(register_msg))
 		print("Sensor registered")
